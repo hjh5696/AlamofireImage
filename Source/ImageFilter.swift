@@ -387,6 +387,33 @@ public struct AspectScaledToFillSizeWithRoundedCornersFilter: CompositeImageFilt
 
 // MARK: -
 
+/// Scales an image from the center while maintaining the aspect ratio to fit within a specified size, then rounds the
+/// corners to the specified radius.
+public struct AspectScaledToFitSizeWithRoundedCornersFilter: CompositeImageFilter {
+    /// Initializes the `AspectScaledToFillSizeWithRoundedCornersFilter` instance with the given size and radius.
+    ///
+    /// - parameter size:                     The size.
+    /// - parameter radius:                   The radius.
+    /// - parameter divideRadiusByImageScale: Whether to divide the radius by the image scale. Set to `true` when the
+    ///                                       image has the same resolution for all screen scales such as @1x, @2x and
+    ///                                       @3x (i.e. single image from web server). Set to `false` for images loaded
+    ///                                       from an asset catalog with varying resolutions for each screen scale.
+    ///                                       `false` by default.
+    ///
+    /// - returns: The new `AspectScaledToFitSizeWithRoundedCornersFilter` instance.
+    public init(size: CGSize, radius: CGFloat, divideRadiusByImageScale: Bool = false) {
+        self.filters = [
+            AspectScaledToFitSizeFilter(size: size),
+            RoundedCornersFilter(radius: radius, divideRadiusByImageScale: divideRadiusByImageScale)
+        ]
+    }
+    
+    /// The image filters to apply to the image in sequential order.
+    public let filters: [ImageFilter]
+}
+
+// MARK: -
+
 /// Scales an image to a specified size, then rounds the corners into a circle.
 public struct ScaledToSizeCircleFilter: CompositeImageFilter {
     /// Initializes the `ScaledToSizeCircleFilter` instance with the given size.
